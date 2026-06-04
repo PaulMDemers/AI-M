@@ -1,0 +1,29 @@
+<Application x:Class="AIM.Desktop.Wpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <SolidColorBrush x:Key="AimBackgroundBrush" Color="#F5F7FA" />
+        <SolidColorBrush x:Key="AimPanelBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="AimBorderBrush" Color="#D8DEE9" />
+        <SolidColorBrush x:Key="AimTextBrush" Color="#172033" />
+        <SolidColorBrush x:Key="AimSubtleTextBrush" Color="#657085" />
+        <SolidColorBrush x:Key="AimAccentBrush" Color="#1C7C7D" />
+
+        <Style TargetType="Button">
+            <Setter Property="MinHeight" Value="34" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="{StaticResource AimAccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="10,7" />
+            <Setter Property="BorderBrush" Value="{StaticResource AimBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Application.Resources>
+</Application>

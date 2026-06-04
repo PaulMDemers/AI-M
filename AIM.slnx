@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AIM.Core/AIM.Core.csproj" />
+    <Project Path="src/AIM.Desktop.WinForms/AIM.Desktop.WinForms.csproj" />
+    <Project Path="src/AIM.Desktop.Wpf/AIM.Desktop.Wpf.csproj" />
+    <Project Path="src/AIM.Providers/AIM.Providers.csproj" />
+    <Project Path="src/AIM.Storage/AIM.Storage.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AIM.Tests/AIM.Tests.csproj" />
+  </Folder>
+</Solution>
