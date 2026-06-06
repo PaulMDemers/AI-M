@@ -27,9 +27,7 @@ internal sealed class FriendListItem
 
     public bool IsReady => Diagnostic?.IsUsable ?? Health.IsReady;
 
-    public string DisplayText => IsReady
-        ? Personality.DisplayName
-        : $"{Personality.DisplayName} - {PresenceLabel}";
+    public string DisplayText => Personality.DisplayName;
 
     public override string ToString()
     {

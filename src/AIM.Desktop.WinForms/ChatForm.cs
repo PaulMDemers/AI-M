@@ -149,17 +149,17 @@ internal sealed class ChatForm : Form
         _summary.AutoEllipsis = true;
 
         _providerSetupPanel.Dock = DockStyle.Fill;
-        _providerSetupPanel.Height = 34;
+        _providerSetupPanel.Height = 42;
         _providerSetupPanel.BackColor = Color.FromArgb(255, 248, 229);
         _providerSetupPanel.BorderStyle = BorderStyle.Fixed3D;
-        _providerSetupPanel.Padding = new Padding(5, 4, 5, 4);
+        _providerSetupPanel.Padding = new Padding(7, 5, 7, 5);
         _providerSetupPanel.Visible = false;
         _providerSetupLabel.AutoSize = false;
         _providerSetupLabel.Dock = DockStyle.Fill;
         _providerSetupLabel.TextAlign = ContentAlignment.MiddleLeft;
         var setupProviderButton = ClassicAim.Button("Setup Provider");
         setupProviderButton.Dock = DockStyle.Right;
-        setupProviderButton.Width = 112;
+        setupProviderButton.Width = 126;
         setupProviderButton.Click += async (_, _) => await ShowProviderSetupAsync();
         _providerSetupPanel.Controls.Add(setupProviderButton);
         _providerSetupPanel.Controls.Add(_providerSetupLabel);

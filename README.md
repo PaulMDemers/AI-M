@@ -1,30 +1,47 @@
 # AI-M
 
-AI-M is an instant messenger style desktop application for managing AI personalities. Think classic AIM or Pidgin, but each buddy is an AI persona with its own provider, memories, conversations, and approval flow.
+AI-M is an instant-messenger style desktop application for managing AI personalities. Think classic AIM or Pidgin, but each buddy is an AI persona with its own provider, memories, conversations, and approval flow.
 
-## What Is Here
+The project is currently a Windows/.NET desktop prototype with a reusable C# core, SQLite persistence, provider integrations, a primary WPF shell, and a classic AIM-inspired WinForms shell.
 
-- `AIM.Core`: provider-neutral chat, personalities, memories, conversations, tool contracts, and self-management parsing.
-- `AIM.Providers`: OpenAI, Ollama, AWS Bedrock, fake provider, diagnostics, and provider status services.
-- `AIM.Storage`: SQLite persistence for personalities, memories, memory suggestions, provider accounts, conversation groups, conversations, and messages.
-- `AIM.Desktop.Wpf`: primary WPF desktop shell with floating chats, buddy list, provider setup, memory review, personality editor, pending action review, and tray behavior.
-- `AIM.Desktop.WinForms`: classic AIM-inspired WinForms shell using the same core/storage/provider stack.
-- `AIM.Tests`: xUnit coverage for storage, providers, tools, context building, parsing, pending approvals, and migrations.
+## Screenshots
 
-## Current Capabilities
+<table>
+  <tr>
+    <td><strong>WPF buddy list</strong></td>
+    <td><strong>WinForms buddy list</strong></td>
+    <td><strong>WinForms chat</strong></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/wpf-buddy-list.png" alt="AI-M WPF buddy list" width="240"></td>
+    <td><img src="docs/screenshots/winforms-buddy-list.png" alt="AI-M WinForms buddy list" width="220"></td>
+    <td><img src="docs/screenshots/winforms-chat.png" alt="AI-M WinForms chat window" width="360"></td>
+  </tr>
+</table>
+
+## What Works Today
 
 - AIM/Pidgin-style buddy list for AI personalities.
-- Floating chat windows and all-in-one WPF mode.
+- Floating chat windows and optional all-in-one WPF mode.
+- WPF and WinForms desktop shells on the same core/storage/provider stack.
 - Provider support for OpenAI, Ollama, AWS Bedrock, and a fake/demo provider.
 - Provider readiness checks and first-run setup.
 - Per-personality memory sets and conversation history.
 - Conversation groups and summaries.
 - Agent tools for memory, personality, conversation, and time operations.
-- Approval-required durable changes, including memory writes, memory deletion, personality updates, system prompt notes, and conversation summary updates.
-- Persistent pending action queue at `%LocalAppData%\AI-M\pending-actions.json`.
-- Shared pending action queue used by both desktop shells.
-- Restored pending tool approvals can be approved after restart and leave an audit trail in chat history.
-- Prebuilt demo personalities and archetypes with avatar assets.
+- Approval-required durable changes for memory writes/deletes, personality updates, system prompt notes, and conversation summaries.
+- Persistent pending action queue shared by both desktop shells.
+- Prebuilt demo figures and fictional archetypes with avatar assets.
+
+## Project Layout
+
+- `src/AIM.Core`: provider-neutral chat, personalities, memories, conversations, tool contracts, pending actions, and self-management parsing.
+- `src/AIM.Providers`: OpenAI, Ollama, AWS Bedrock, fake provider, diagnostics, and provider status services.
+- `src/AIM.Storage`: EF Core/SQLite persistence and migrations.
+- `src/AIM.Desktop.Wpf`: primary WPF shell with floating chats, provider setup, memory review, personality editor, pending actions, and tray behavior.
+- `src/AIM.Desktop.WinForms`: classic AIM-inspired WinForms shell.
+- `tests/AIM.Tests`: xUnit coverage for storage, providers, tools, context building, parsing, pending approvals, and migrations.
+- `docs`: architecture, development, roadmap, and feature notes.
 
 ## Requirements
 
@@ -35,31 +52,31 @@ AI-M is an instant messenger style desktop application for managing AI personali
   - Ollama running locally or reachable over HTTP
   - AWS credentials/region for Bedrock
 
-## Build
+## Quick Start
 
 ```powershell
 dotnet restore AIM.slnx
 dotnet build AIM.slnx
-```
-
-## Test
-
-```powershell
 dotnet test tests\AIM.Tests\AIM.Tests.csproj
 ```
 
-## Run
-
-WPF:
+Run the primary WPF shell:
 
 ```powershell
 dotnet run --project src\AIM.Desktop.Wpf\AIM.Desktop.Wpf.csproj
 ```
 
-WinForms:
+Run the classic WinForms shell:
 
 ```powershell
 dotnet run --project src\AIM.Desktop.WinForms\AIM.Desktop.WinForms.csproj
+```
+
+For demo screenshots or local exploration without the first-run setup dialog:
+
+```powershell
+$env:AIM_DEMO_MODE="true"
+dotnet run --project src\AIM.Desktop.Wpf\AIM.Desktop.Wpf.csproj
 ```
 
 ## Provider Configuration
@@ -71,17 +88,33 @@ $env:OPENAI_API_KEY="..."
 $env:AIM_OPENAI_MODEL="gpt-4.1-mini"
 ```
 
-Provider accounts saved through the UI are stored locally in SQLite. Credentials are protected with Windows data protection where available.
+Saved provider accounts live in the local SQLite database. Credentials are protected with Windows data protection where available.
 
-## Repository Notes
+## Local Data And Privacy
 
-- Build outputs, Visual Studio state, local databases, local app settings, and environment files are ignored.
-- Avatar images live in `assets/avatars`.
-- EF Core tooling is pinned in `dotnet-tools.json`.
+AI-M stores runtime data locally under `%LocalAppData%\AI-M` by default.
+
+- SQLite database: `%LocalAppData%\AI-M\aim.db`
+- Pending approvals: `%LocalAppData%\AI-M\pending-actions.json`
+- First-run preference: `%LocalAppData%\AI-M\setup-preferences.json`
+
+You can point storage at a throwaway database for testing or screenshots:
+
+```powershell
+$env:AIM_SQLITE_PATH="$pwd\artifacts\demo\aim.db"
+```
+
+Build outputs, local databases, app settings, Visual Studio state, provider credentials, and `.env` files are ignored by git.
 
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md)
 - [Development](docs/DEVELOPMENT.md)
-- [Roadmap](docs/ROADMAP.md)
 - [Pending Actions](docs/PENDING_ACTIONS.md)
+- [Roadmap](docs/ROADMAP.md)
+
+## Project Status
+
+AI-M is early and actively evolving. The core architecture, storage, provider plumbing, memory flow, tool approvals, and two desktop shells are in place, but UX polish, provider breadth, packaging, and long-running agent workflows are still moving targets.
+
+No open-source license has been selected yet. Choose and add a `LICENSE` file before treating the repository as reusable by third parties.

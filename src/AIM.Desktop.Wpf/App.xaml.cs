@@ -31,7 +31,8 @@ public partial class App : System.Windows.Application
                 services.AddSingleton<IPersonalityEditorWindowService, PersonalityEditorWindowService>();
                 services.AddSingleton<IMemoryReviewWindowService, MemoryReviewWindowService>();
                 services.AddSingleton<IPendingAgentActionQueue, FilePendingAgentActionQueue>();
-                services.AddSingleton<PendingAgentActionService>();
+                services.AddSingleton(serviceProvider => new PendingAgentActionService(
+                    serviceProvider.GetRequiredService<IPendingAgentActionQueue>()));
                 services.AddSingleton<IPendingActionsReviewWindowService, PendingActionsReviewWindowService>();
                 services.AddTransient<FirstRunSetupViewModel>();
                 services.AddTransient<ProviderSettingsViewModel>();

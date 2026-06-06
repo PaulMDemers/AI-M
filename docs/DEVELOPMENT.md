@@ -28,6 +28,19 @@ dotnet run --project src\AIM.Desktop.Wpf\AIM.Desktop.Wpf.csproj
 dotnet run --project src\AIM.Desktop.WinForms\AIM.Desktop.WinForms.csproj
 ```
 
+To run WPF in demo mode without showing the first-run provider setup dialog:
+
+```powershell
+$env:AIM_DEMO_MODE="true"
+dotnet run --project src\AIM.Desktop.Wpf\AIM.Desktop.Wpf.csproj
+```
+
+To isolate local data while testing:
+
+```powershell
+$env:AIM_SQLITE_PATH="$pwd\artifacts\dev\aim.db"
+```
+
 ## EF Core Migrations
 
 The EF tool is pinned in `dotnet-tools.json`.
@@ -47,6 +60,17 @@ dotnet ef migrations add MigrationName --project src\AIM.Storage\AIM.Storage.csp
 - Approval-required tools should never mutate durable user data without an approval path.
 - Avoid committing local databases, app settings, provider credentials, or Visual Studio user files.
 
+## Screenshot Assets
+
+Public screenshots live in `docs/screenshots`.
+
+When refreshing screenshots:
+
+- Use a temporary database with `AIM_SQLITE_PATH`.
+- Use `AIM_DEMO_MODE=true` for WPF screenshots that should skip first-run setup.
+- Do not capture real API keys, local provider credentials, personal conversations, or private pending actions.
+- Rebuild the target desktop project before capturing so screenshots match current code.
+
 ## Verification Checklist
 
 Before committing:
@@ -55,4 +79,10 @@ Before committing:
 dotnet test tests\AIM.Tests\AIM.Tests.csproj
 dotnet build src\AIM.Desktop.Wpf\AIM.Desktop.Wpf.csproj
 dotnet build src\AIM.Desktop.WinForms\AIM.Desktop.WinForms.csproj
+```
+
+Before public pushes, also run:
+
+```powershell
+dotnet build AIM.slnx -c Release
 ```

@@ -16,6 +16,11 @@ public sealed class FirstRunSetupPreferenceService
 
     public async Task<bool> GetUseDemoModeAsync(CancellationToken cancellationToken = default)
     {
+        if (bool.TryParse(Environment.GetEnvironmentVariable("AIM_DEMO_MODE"), out var useDemoMode) && useDemoMode)
+        {
+            return true;
+        }
+
         if (!File.Exists(_settingsPath))
         {
             return false;
