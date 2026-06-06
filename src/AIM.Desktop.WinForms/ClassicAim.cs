@@ -5,9 +5,9 @@ namespace AIM.Desktop.WinForms;
 
 internal static class ClassicAim
 {
-    public static readonly Font UiFont = new("MS Sans Serif", 8.25f, FontStyle.Regular, GraphicsUnit.Point);
-    public static readonly Font BoldFont = new("MS Sans Serif", 8.25f, FontStyle.Bold, GraphicsUnit.Point);
-    public static readonly Font SmallFont = new("MS Sans Serif", 7.5f, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font UiFont = new("MS Sans Serif", 9.25f, FontStyle.Regular, GraphicsUnit.Point);
+    public static readonly Font BoldFont = new("MS Sans Serif", 9.25f, FontStyle.Bold, GraphicsUnit.Point);
+    public static readonly Font SmallFont = new("MS Sans Serif", 8.25f, FontStyle.Regular, GraphicsUnit.Point);
 
     public static readonly Color AimBlue = Color.FromArgb(0, 0, 128);
     public static readonly Color AwayYellow = Color.FromArgb(255, 246, 196);
@@ -28,7 +28,7 @@ internal static class ClassicAim
         {
             Text = text,
             Font = UiFont,
-            Height = 24,
+            Height = 30,
             FlatStyle = FlatStyle.Standard,
             UseVisualStyleBackColor = true
         };
@@ -59,12 +59,12 @@ internal static class ClassicAim
         var images = new ImageList
         {
             ColorDepth = ColorDepth.Depth32Bit,
-            ImageSize = new Size(16, 16)
+            ImageSize = new Size(20, 20)
         };
 
-        images.Images.Add("online", DrawStatusOrb(Color.FromArgb(0, 180, 0)));
-        images.Images.Add("away", DrawStatusOrb(Color.FromArgb(245, 170, 0)));
-        images.Images.Add("group", DrawFolderGlyph());
+        images.Images.Add("online", DrawStatusOrb(Color.FromArgb(0, 180, 0), images.ImageSize.Width));
+        images.Images.Add("away", DrawStatusOrb(Color.FromArgb(245, 170, 0), images.ImageSize.Width));
+        images.Images.Add("group", DrawFolderGlyph(images.ImageSize.Width));
 
         return images;
     }
@@ -148,29 +148,30 @@ internal static class ClassicAim
         return bitmap;
     }
 
-    private static Bitmap DrawStatusOrb(Color color)
+    private static Bitmap DrawStatusOrb(Color color, int size)
     {
-        var bitmap = new Bitmap(16, 16);
+        var bitmap = new Bitmap(size, size);
         using var graphics = Graphics.FromImage(bitmap);
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
         using var shadow = new SolidBrush(Color.FromArgb(80, Color.Black));
-        using var brush = new LinearGradientBrush(new Rectangle(3, 2, 10, 10), Color.White, color, 45);
+        var orb = Math.Max(10, size - 7);
+        using var brush = new LinearGradientBrush(new Rectangle(4, 3, orb, orb), Color.White, color, 45);
         using var pen = new Pen(Color.FromArgb(80, 80, 80));
-        graphics.FillEllipse(shadow, 4, 4, 10, 10);
-        graphics.FillEllipse(brush, 3, 2, 10, 10);
-        graphics.DrawEllipse(pen, 3, 2, 10, 10);
+        graphics.FillEllipse(shadow, 5, 5, orb, orb);
+        graphics.FillEllipse(brush, 4, 3, orb, orb);
+        graphics.DrawEllipse(pen, 4, 3, orb, orb);
         return bitmap;
     }
 
-    private static Bitmap DrawFolderGlyph()
+    private static Bitmap DrawFolderGlyph(int size)
     {
-        var bitmap = new Bitmap(16, 16);
+        var bitmap = new Bitmap(size, size);
         using var graphics = Graphics.FromImage(bitmap);
         using var brush = new SolidBrush(Color.FromArgb(255, 219, 105));
         using var pen = new Pen(Color.FromArgb(120, 90, 20));
-        graphics.FillRectangle(brush, 2, 5, 12, 8);
-        graphics.FillRectangle(brush, 3, 3, 6, 3);
-        graphics.DrawRectangle(pen, 2, 5, 12, 8);
+        graphics.FillRectangle(brush, 3, 7, size - 6, size - 9);
+        graphics.FillRectangle(brush, 4, 4, size / 2, 4);
+        graphics.DrawRectangle(pen, 3, 7, size - 6, size - 9);
         return bitmap;
     }
 }

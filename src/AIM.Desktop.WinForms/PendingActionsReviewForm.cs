@@ -13,9 +13,9 @@ internal sealed class PendingActionsReviewForm : Form
         _pendingAgentActionQueue = pendingAgentActionQueue;
         ClassicAim.ApplyClassicForm(this);
         Text = "Pending AI Actions";
-        Width = 600;
-        Height = 430;
-        MinimumSize = new Size(480, 340);
+        Width = 640;
+        Height = 470;
+        MinimumSize = new Size(520, 380);
         FormBorderStyle = FormBorderStyle.SizableToolWindow;
         BuildUi();
         _pendingAgentActionQueue.ActionsChanged += OnActionsChanged;
@@ -38,7 +38,7 @@ internal sealed class PendingActionsReviewForm : Form
 
         var headerPanel = new Panel
         {
-            Height = 44,
+            Height = 52,
             Dock = DockStyle.Fill,
             BackColor = ClassicAim.AwayYellow,
             BorderStyle = BorderStyle.Fixed3D,
@@ -107,7 +107,7 @@ internal sealed class PendingActionsReviewForm : Form
         var panel = new Panel
         {
             Width = Math.Max(420, ClientSize.Width - 40),
-            Height = 104,
+            Height = 118,
             BorderStyle = BorderStyle.Fixed3D,
             BackColor = Color.FromArgb(255, 250, 214),
             Margin = new Padding(6)
@@ -117,12 +117,12 @@ internal sealed class PendingActionsReviewForm : Form
             Text = $"{action.Title}\r\n{action.SourceLabel}\r\n{action.Detail}\r\n{action.ApprovalNote}",
             Font = ClassicAim.SmallFont,
             Location = new Point(8, 7),
-            Size = new Size(panel.Width - 180, 88),
+            Size = new Size(panel.Width - 202, 102),
             AutoEllipsis = true
         };
         var approve = ClassicAim.Button("Approve");
-        approve.Size = new Size(76, 24);
-        approve.Location = new Point(panel.Width - 164, 38);
+        approve.Size = new Size(92, 30);
+        approve.Location = new Point(panel.Width - 190, 43);
         approve.Enabled = action.CanApprove;
         approve.Click += async (_, _) =>
         {
@@ -132,8 +132,8 @@ internal sealed class PendingActionsReviewForm : Form
         };
 
         var deny = ClassicAim.Button("Deny");
-        deny.Size = new Size(62, 24);
-        deny.Location = new Point(panel.Width - 82, 38);
+        deny.Size = new Size(76, 30);
+        deny.Location = new Point(panel.Width - 90, 43);
         deny.Click += (_, _) =>
         {
             _pendingAgentActionQueue.Remove(action.Id);

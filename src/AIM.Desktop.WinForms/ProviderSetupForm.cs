@@ -29,9 +29,9 @@ internal sealed class ProviderSetupForm : Form
 
         ClassicAim.ApplyClassicForm(this);
         Text = $"{GetDisplayName()} Setup";
-        Width = 430;
-        Height = 230;
-        MinimumSize = new Size(380, 210);
+        Width = 460;
+        Height = 260;
+        MinimumSize = new Size(420, 240);
         BuildUi();
         Load += async (_, _) => await LoadProviderAsync();
     }
@@ -89,10 +89,10 @@ internal sealed class ProviderSetupForm : Form
             AutoSize = true
         };
         var save = ClassicAim.Button("Save");
-        save.Width = 80;
+        save.Width = 92;
         save.Click += async (_, _) => await SaveAsync();
         var cancel = ClassicAim.Button("Cancel");
-        cancel.Width = 80;
+        cancel.Width = 92;
         cancel.Click += (_, _) => DialogResult = DialogResult.Cancel;
         buttons.Controls.Add(save);
         buttons.Controls.Add(cancel);

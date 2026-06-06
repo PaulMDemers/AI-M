@@ -145,7 +145,7 @@ internal sealed class ChatForm : Form
         {
             Text = "Never give out passwords or secrets in an instant message.",
             Dock = DockStyle.Fill,
-            Height = 22,
+            Height = 28,
             TextAlign = ContentAlignment.MiddleLeft,
             Font = ClassicAim.SmallFont,
             ForeColor = Color.FromArgb(120, 60, 0),
@@ -155,7 +155,7 @@ internal sealed class ChatForm : Form
         };
 
         _summary.Dock = DockStyle.Fill;
-        _summary.Height = 18;
+        _summary.Height = 24;
         _summary.AutoEllipsis = true;
 
         _providerSetupPanel.Dock = DockStyle.Fill;
@@ -205,7 +205,7 @@ internal sealed class ChatForm : Form
         var buttons = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
-            Height = 32,
+            Height = 38,
             ColumnCount = 3
         };
         buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
@@ -515,11 +515,11 @@ internal sealed class ChatForm : Form
             AutoEllipsis = true
         };
         var approve = ClassicAim.Button("Approve");
-        approve.Size = new Size(70, 23);
-        approve.Location = new Point(panel.Width - 150, 16);
+        approve.Size = new Size(82, 30);
+        approve.Location = new Point(panel.Width - 164, 14);
         var deny = ClassicAim.Button("Deny");
-        deny.Size = new Size(60, 23);
-        deny.Location = new Point(panel.Width - 74, 16);
+        deny.Size = new Size(68, 30);
+        deny.Location = new Point(panel.Width - 76, 14);
 
         approve.Click += async (_, _) =>
         {

@@ -39,9 +39,9 @@ internal sealed class BuddyListForm : Form
 
         ClassicAim.ApplyClassicForm(this);
         Text = "AI-M Buddy List";
-        Width = 278;
-        Height = 640;
-        MinimumSize = new Size(248, 460);
+        Width = 340;
+        Height = 720;
+        MinimumSize = new Size(310, 540);
         MaximizeBox = false;
         FormBorderStyle = FormBorderStyle.SizableToolWindow;
 
@@ -78,14 +78,14 @@ internal sealed class BuddyListForm : Form
             "About AI-M",
             MessageBoxButtons.OK,
             MessageBoxIcon.Information));
-        menu.Items.AddRange([myAim, people, new ToolStripMenuItem("View"), help]);
+        menu.Items.AddRange([myAim, people, help]);
 
         var root = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
             RowCount = 6,
             ColumnCount = 1,
-            Padding = new Padding(4, 0, 4, 4)
+            Padding = new Padding(8, 0, 8, 8)
         };
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -96,71 +96,66 @@ internal sealed class BuddyListForm : Form
 
         var banner = new Panel
         {
-            Height = 54,
+            Height = 64,
             Dock = DockStyle.Fill,
             BackColor = ClassicAim.AwayYellow,
             BorderStyle = BorderStyle.Fixed3D,
-            Padding = new Padding(6, 4, 6, 4)
+            Padding = new Padding(8, 6, 8, 6),
+            Margin = new Padding(0, 2, 0, 6)
         };
         var bannerTitle = ClassicAim.Label("AI-M Instant Messenger", ClassicAim.BoldFont, ClassicAim.AimBlue);
-        bannerTitle.Location = new Point(6, 6);
+        bannerTitle.Location = new Point(8, 8);
         var bannerText = ClassicAim.Label("Managing AI personalities", ClassicAim.SmallFont);
-        bannerText.Location = new Point(6, 26);
+        bannerText.Location = new Point(8, 32);
         banner.Controls.AddRange([bannerTitle, bannerText]);
 
         var statusPanel = new Panel
         {
-            Height = 26,
+            Height = 34,
             Dock = DockStyle.Fill,
-            Padding = new Padding(2, 4, 0, 0)
+            Padding = new Padding(2, 7, 0, 0)
         };
         statusPanel.Controls.Add(_statusLabel);
 
         _pendingButton.Dock = DockStyle.Fill;
-        _pendingButton.Height = 24;
+        _pendingButton.Height = 30;
         _pendingButton.BackColor = Color.FromArgb(255, 250, 214);
+        _pendingButton.Margin = new Padding(0, 0, 0, 6);
         _pendingButton.Visible = false;
         _pendingButton.Click += (_, _) => OpenPendingActions();
-
-        var tabs = new TabControl
-        {
-            Dock = DockStyle.Fill,
-            Font = ClassicAim.UiFont
-        };
-        var onlinePage = new TabPage("Online") { BackColor = SystemColors.Control };
-        var setupPage = new TabPage("List Setup") { BackColor = SystemColors.Control };
 
         _buddyTree.Dock = DockStyle.Fill;
         _buddyTree.BorderStyle = BorderStyle.Fixed3D;
         _buddyTree.Font = ClassicAim.UiFont;
+        _buddyTree.FullRowSelect = true;
         _buddyTree.HideSelection = false;
+        _buddyTree.HotTracking = true;
+        _buddyTree.Indent = 22;
+        _buddyTree.ItemHeight = 27;
+        _buddyTree.Margin = new Padding(0, 0, 0, 6);
+        _buddyTree.ShowLines = false;
         _buddyTree.ShowNodeToolTips = true;
+        _buddyTree.ShowRootLines = false;
         _buddyTree.ImageList = ClassicAim.CreateBuddyImages();
         _buddyTree.NodeMouseDoubleClick += async (_, _) => await OpenSelectedChatAsync();
-        onlinePage.Controls.Add(_buddyTree);
-
-        var setupLabel = ClassicAim.Label("Use the WPF shell for detailed personality templates, memory review, and provider setup.", ClassicAim.SmallFont);
-        setupLabel.MaximumSize = new Size(220, 0);
-        setupLabel.Location = new Point(8, 10);
-        setupPage.Controls.Add(setupLabel);
-        tabs.TabPages.AddRange([onlinePage, setupPage]);
 
         var footerPanel = new TableLayoutPanel
         {
             RowCount = 2,
             ColumnCount = 1,
-            Height = 58,
+            Height = 76,
             Dock = DockStyle.Fill,
-            Padding = new Padding(0, 3, 0, 0)
+            Padding = new Padding(0, 4, 0, 0)
         };
-        footerPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 22));
         footerPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+        footerPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 38));
 
         var statusBox = ClassicAim.SunkenPanel();
         statusBox.Dock = DockStyle.Fill;
-        statusBox.Padding = new Padding(5, 2, 4, 0);
+        statusBox.Padding = new Padding(7, 2, 6, 0);
         _footerLabel.Dock = DockStyle.Fill;
         _footerLabel.AutoSize = false;
+        _footerLabel.AutoEllipsis = true;
         _footerLabel.TextAlign = ContentAlignment.MiddleLeft;
         statusBox.Controls.Add(_footerLabel);
 
@@ -170,11 +165,15 @@ internal sealed class BuddyListForm : Form
             Dock = DockStyle.Fill,
             Margin = new Padding(0, 4, 0, 0)
         };
-        buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 62));
-        buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38));
+        buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+        buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
         var imButton = ClassicAim.Button("IM");
+        imButton.Dock = DockStyle.Fill;
+        imButton.Margin = new Padding(0, 0, 4, 0);
         imButton.Click += async (_, _) => await OpenSelectedChatAsync();
         var infoButton = ClassicAim.Button("Info");
+        infoButton.Dock = DockStyle.Fill;
+        infoButton.Margin = new Padding(4, 0, 0, 0);
         infoButton.Click += (_, _) => ShowSelectedInfo();
         buttons.Controls.Add(imButton, 0, 0);
         buttons.Controls.Add(infoButton, 1, 0);
@@ -185,7 +184,7 @@ internal sealed class BuddyListForm : Form
         root.Controls.Add(banner, 0, 1);
         root.Controls.Add(statusPanel, 0, 2);
         root.Controls.Add(_pendingButton, 0, 3);
-        root.Controls.Add(tabs, 0, 4);
+        root.Controls.Add(_buddyTree, 0, 4);
         root.Controls.Add(footerPanel, 0, 5);
         Controls.Add(root);
         MainMenuStrip = menu;
