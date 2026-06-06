@@ -1,4 +1,5 @@
 using AIM.Core.Personalities;
+using AIM.Core.PendingActions;
 using AIM.Core.Providers;
 using AIM.Core.Services;
 using AIM.Core.Tools;
@@ -16,7 +17,7 @@ internal sealed class ChatWindowManager
     private readonly IMemorySuggestionService _memorySuggestionService;
     private readonly IChatContextBuilder _chatContextBuilder;
     private readonly IAgentToolRegistry _toolRegistry;
-    private readonly PendingAgentActionService _pendingAgentActionService;
+    private readonly IPendingAgentActionQueue _pendingAgentActionQueue;
     private readonly IEnumerable<IAiProvider> _providers;
     private readonly Dictionary<Guid, ChatForm> _openWindows = [];
 
@@ -30,7 +31,7 @@ internal sealed class ChatWindowManager
         IMemorySuggestionService memorySuggestionService,
         IChatContextBuilder chatContextBuilder,
         IAgentToolRegistry toolRegistry,
-        PendingAgentActionService pendingAgentActionService,
+        IPendingAgentActionQueue pendingAgentActionQueue,
         IEnumerable<IAiProvider> providers)
     {
         _conversationService = conversationService;
@@ -42,7 +43,7 @@ internal sealed class ChatWindowManager
         _memorySuggestionService = memorySuggestionService;
         _chatContextBuilder = chatContextBuilder;
         _toolRegistry = toolRegistry;
-        _pendingAgentActionService = pendingAgentActionService;
+        _pendingAgentActionQueue = pendingAgentActionQueue;
         _providers = providers;
     }
 
@@ -66,7 +67,7 @@ internal sealed class ChatWindowManager
             _memorySuggestionService,
             _chatContextBuilder,
             _toolRegistry,
-            _pendingAgentActionService,
+            _pendingAgentActionQueue,
             _providers);
         form.FormClosed += (_, _) => _openWindows.Remove(personality.Id);
         _openWindows[personality.Id] = form;

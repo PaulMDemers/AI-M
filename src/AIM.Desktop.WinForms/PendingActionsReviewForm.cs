@@ -1,14 +1,16 @@
+using AIM.Core.PendingActions;
+
 namespace AIM.Desktop.WinForms;
 
 internal sealed class PendingActionsReviewForm : Form
 {
-    private readonly PendingAgentActionService _pendingAgentActionService;
+    private readonly IPendingAgentActionQueue _pendingAgentActionQueue;
     private readonly FlowLayoutPanel _list = new();
     private readonly Label _header = ClassicAim.Label("No pending AI actions", ClassicAim.BoldFont, ClassicAim.AimBlue);
 
-    public PendingActionsReviewForm(PendingAgentActionService pendingAgentActionService)
+    public PendingActionsReviewForm(IPendingAgentActionQueue pendingAgentActionQueue)
     {
-        _pendingAgentActionService = pendingAgentActionService;
+        _pendingAgentActionQueue = pendingAgentActionQueue;
         ClassicAim.ApplyClassicForm(this);
         Text = "Pending AI Actions";
         Width = 600;
@@ -16,8 +18,8 @@ internal sealed class PendingActionsReviewForm : Form
         MinimumSize = new Size(480, 340);
         FormBorderStyle = FormBorderStyle.SizableToolWindow;
         BuildUi();
-        _pendingAgentActionService.ActionsChanged += OnActionsChanged;
-        FormClosed += (_, _) => _pendingAgentActionService.ActionsChanged -= OnActionsChanged;
+        _pendingAgentActionQueue.ActionsChanged += OnActionsChanged;
+        FormClosed += (_, _) => _pendingAgentActionQueue.ActionsChanged -= OnActionsChanged;
         RefreshList();
     }
 
@@ -81,12 +83,12 @@ internal sealed class PendingActionsReviewForm : Form
 
     private void RefreshList()
     {
-        _header.Text = _pendingAgentActionService.Actions.Count == 1
+        _header.Text = _pendingAgentActionQueue.Actions.Count == 1
             ? "1 pending AI action"
-            : $"{_pendingAgentActionService.Actions.Count} pending AI actions";
+            : $"{_pendingAgentActionQueue.Actions.Count} pending AI actions";
         _list.Controls.Clear();
 
-        if (_pendingAgentActionService.Actions.Count == 0)
+        if (_pendingAgentActionQueue.Actions.Count == 0)
         {
             var empty = ClassicAim.Label("No pending actions.", ClassicAim.UiFont, SystemColors.GrayText);
             empty.Margin = new Padding(10);
@@ -94,7 +96,7 @@ internal sealed class PendingActionsReviewForm : Form
             return;
         }
 
-        foreach (var action in _pendingAgentActionService.Actions.ToArray())
+        foreach (var action in _pendingAgentActionQueue.Actions.ToArray())
         {
             _list.Controls.Add(CreateActionPanel(action));
         }
@@ -125,7 +127,7 @@ internal sealed class PendingActionsReviewForm : Form
         approve.Click += async (_, _) =>
         {
             approve.Enabled = false;
-            await _pendingAgentActionService.ApproveAsync(action);
+            await _pendingAgentActionQueue.ApproveAsync(action);
             RefreshList();
         };
 
@@ -134,7 +136,7 @@ internal sealed class PendingActionsReviewForm : Form
         deny.Location = new Point(panel.Width - 82, 38);
         deny.Click += (_, _) =>
         {
-            _pendingAgentActionService.Remove(action.Id);
+            _pendingAgentActionQueue.Remove(action.Id);
             RefreshList();
         };
 

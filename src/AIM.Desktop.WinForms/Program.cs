@@ -1,3 +1,4 @@
+using AIM.Core.PendingActions;
 using AIM.Providers;
 using AIM.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,7 @@ internal static class Program
             {
                 services.AddAimStorage(context.Configuration);
                 services.AddAimProviderCatalog(context.Configuration);
-                services.AddSingleton<PendingAgentActionService>();
+                services.AddSingleton<IPendingAgentActionQueue, FilePendingAgentActionQueue>();
                 services.AddSingleton<ChatWindowManager>();
                 services.AddSingleton<BuddyListForm>();
             })

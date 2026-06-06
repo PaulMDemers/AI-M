@@ -1,4 +1,5 @@
 using System.Windows;
+using AIM.Core.PendingActions;
 using AIM.Desktop.Wpf.Services;
 using AIM.Desktop.Wpf.ViewModels;
 using AIM.Providers;
@@ -29,6 +30,7 @@ public partial class App : System.Windows.Application
                 services.AddSingleton<IProviderSettingsWindowService, ProviderSettingsWindowService>();
                 services.AddSingleton<IPersonalityEditorWindowService, PersonalityEditorWindowService>();
                 services.AddSingleton<IMemoryReviewWindowService, MemoryReviewWindowService>();
+                services.AddSingleton<IPendingAgentActionQueue, FilePendingAgentActionQueue>();
                 services.AddSingleton<PendingAgentActionService>();
                 services.AddSingleton<IPendingActionsReviewWindowService, PendingActionsReviewWindowService>();
                 services.AddTransient<FirstRunSetupViewModel>();

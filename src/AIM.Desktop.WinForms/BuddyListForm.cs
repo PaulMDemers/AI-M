@@ -1,4 +1,5 @@
 using AIM.Core.Personalities;
+using AIM.Core.PendingActions;
 using AIM.Core.Providers;
 using AIM.Core.Services;
 
@@ -11,7 +12,7 @@ internal sealed class BuddyListForm : Form
     private readonly IProviderStatusService _providerStatusService;
     private readonly IReadOnlySet<string> _registeredProviderKeys;
     private readonly ChatWindowManager _chatWindowManager;
-    private readonly PendingAgentActionService _pendingAgentActionService;
+    private readonly IPendingAgentActionQueue _pendingAgentActionQueue;
     private readonly TreeView _buddyTree = new();
     private readonly Label _statusLabel = ClassicAim.Label("Online", ClassicAim.BoldFont, ClassicAim.AimBlue);
     private readonly Button _pendingButton = ClassicAim.Button("Pending AI Actions");
@@ -25,7 +26,7 @@ internal sealed class BuddyListForm : Form
         IProviderStatusService providerStatusService,
         IEnumerable<IAiProvider> providers,
         ChatWindowManager chatWindowManager,
-        PendingAgentActionService pendingAgentActionService)
+        IPendingAgentActionQueue pendingAgentActionQueue)
     {
         _personalityService = personalityService;
         _providerAccountService = providerAccountService;
@@ -34,7 +35,7 @@ internal sealed class BuddyListForm : Form
             .Select(provider => provider.Key)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
         _chatWindowManager = chatWindowManager;
-        _pendingAgentActionService = pendingAgentActionService;
+        _pendingAgentActionQueue = pendingAgentActionQueue;
 
         ClassicAim.ApplyClassicForm(this);
         Text = "AI-M Buddy List";
@@ -47,7 +48,7 @@ internal sealed class BuddyListForm : Form
         BuildUi();
         InitializeTray();
         _providerStatusService.ProviderStatusChanged += OnProviderStatusChanged;
-        _pendingAgentActionService.ActionsChanged += OnPendingActionsChanged;
+        _pendingAgentActionQueue.ActionsChanged += OnPendingActionsChanged;
 
         Shown += async (_, _) => await LoadBuddiesAsync();
         FormClosing += OnFormClosing;
@@ -370,7 +371,7 @@ internal sealed class BuddyListForm : Form
 
     private void OpenPendingActions()
     {
-        using var review = new PendingActionsReviewForm(_pendingAgentActionService);
+        using var review = new PendingActionsReviewForm(_pendingAgentActionQueue);
         review.ShowDialog(this);
         UpdatePendingIndicator();
     }
@@ -393,7 +394,7 @@ internal sealed class BuddyListForm : Form
 
     private void UpdatePendingIndicator()
     {
-        var count = _pendingAgentActionService.Actions.Count;
+        var count = _pendingAgentActionQueue.Actions.Count;
         _pendingButton.Text = count == 1
             ? "1 AI action needs review"
             : $"{count} AI actions need review";
@@ -440,6 +441,6 @@ internal sealed class BuddyListForm : Form
 
         _trayIcon.Dispose();
         _providerStatusService.ProviderStatusChanged -= OnProviderStatusChanged;
-        _pendingAgentActionService.ActionsChanged -= OnPendingActionsChanged;
+        _pendingAgentActionQueue.ActionsChanged -= OnPendingActionsChanged;
     }
 }

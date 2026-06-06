@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 using AIM.Core.Chat;
+using AIM.Core.PendingActions;
 using AIM.Core.Personalities;
 using AIM.Core.Services;
 using AIM.Core.Tools;

@@ -22,6 +22,7 @@ AI-M is an instant messenger style desktop application for managing AI personali
 - Agent tools for memory, personality, conversation, and time operations.
 - Approval-required durable changes, including memory writes, memory deletion, personality updates, system prompt notes, and conversation summary updates.
 - Persistent pending action queue at `%LocalAppData%\AI-M\pending-actions.json`.
+- Shared pending action queue used by both desktop shells.
 - Restored pending tool approvals can be approved after restart and leave an audit trail in chat history.
 - Prebuilt demo personalities and archetypes with avatar assets.
 

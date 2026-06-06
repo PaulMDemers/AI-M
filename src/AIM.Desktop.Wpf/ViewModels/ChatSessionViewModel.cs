@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using AIM.Core.Chat;
+using AIM.Core.PendingActions;
 using AIM.Core.Personalities;
 using AIM.Core.Providers;
 using AIM.Core.Services;

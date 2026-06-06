@@ -23,7 +23,7 @@ When the originating chat window is still alive, approval does two things:
 
 ## Restored Approvals
 
-Pending tool approvals are persisted to:
+Pending tool approvals are managed by the shared `AIM.Core.PendingActions` queue and persisted to:
 
 ```text
 %LocalAppData%\AI-M\pending-actions.json
@@ -49,7 +49,6 @@ Restored approvals execute the durable tool and write an audit message to the or
 
 ## Future Improvements
 
-- Move pending action persistence into a shared core/storage service instead of shell-specific implementations.
 - Add provider follow-up reconstruction for restored approvals.
 - Add per-personality pending badges in the buddy list.
 - Add action categories and filters.

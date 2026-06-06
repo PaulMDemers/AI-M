@@ -2,7 +2,6 @@
 
 ## Near Term
 
-- Move pending action persistence into shared core/storage code.
 - Add per-personality pending badges.
 - Add a compact agent activity strip in chat windows.
 - Improve restored approval provider follow-up behavior.

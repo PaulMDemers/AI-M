@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using AIM.Core.Chat;
+using AIM.Core.PendingActions;
 using AIM.Core.Personalities;
 using AIM.Core.Providers;
 using AIM.Core.Services;
@@ -19,7 +20,7 @@ internal sealed class ChatForm : Form
     private readonly IMemorySuggestionService _memorySuggestionService;
     private readonly IChatContextBuilder _chatContextBuilder;
     private readonly IAgentToolRegistry _toolRegistry;
-    private readonly PendingAgentActionService _pendingAgentActionService;
+    private readonly IPendingAgentActionQueue _pendingAgentActionQueue;
     private readonly IReadOnlyDictionary<string, IAiProvider> _providers;
     private readonly RichTextBox _transcript = new();
     private readonly TextBox _input = new();
@@ -45,7 +46,7 @@ internal sealed class ChatForm : Form
         IMemorySuggestionService memorySuggestionService,
         IChatContextBuilder chatContextBuilder,
         IAgentToolRegistry toolRegistry,
-        PendingAgentActionService pendingAgentActionService,
+        IPendingAgentActionQueue pendingAgentActionQueue,
         IEnumerable<IAiProvider> providers)
     {
         Personality = personality;
@@ -58,7 +59,7 @@ internal sealed class ChatForm : Form
         _memorySuggestionService = memorySuggestionService;
         _chatContextBuilder = chatContextBuilder;
         _toolRegistry = toolRegistry;
-        _pendingAgentActionService = pendingAgentActionService;
+        _pendingAgentActionQueue = pendingAgentActionQueue;
         _providers = providers.ToDictionary(provider => provider.Key, StringComparer.OrdinalIgnoreCase);
 
         ClassicAim.ApplyClassicForm(this);
@@ -452,7 +453,7 @@ internal sealed class ChatForm : Form
             return;
         }
 
-        var pendingAction = _pendingAgentActionService.CreateToolApproval(
+        var pendingAction = _pendingAgentActionQueue.CreateToolApproval(
             BuildToolApprovalTitle(call),
             BuildToolApprovalDetail(call),
             Personality.DisplayName,
@@ -461,7 +462,7 @@ internal sealed class ChatForm : Form
             Personality.Id,
             _conversation.Id,
             call);
-        _pendingAgentActionService.Add(pendingAction);
+        _pendingAgentActionQueue.Add(pendingAction);
 
         AddApproval(
             pendingAction.Title,
@@ -479,7 +480,7 @@ internal sealed class ChatForm : Form
                     cancellationToken);
                 await RefreshLocalStateAfterToolAsync(call);
                 AppendToolTrace(call, result);
-                _pendingAgentActionService.Remove(pendingAction.Id);
+                _pendingAgentActionQueue.Remove(pendingAction.Id);
 
                 return new ChatMessage(
                     Guid.NewGuid(),
@@ -488,7 +489,7 @@ internal sealed class ChatForm : Form
                     FormatToolResults([result]),
                     DateTimeOffset.Now);
             },
-            () => _pendingAgentActionService.Remove(pendingAction.Id));
+            () => _pendingAgentActionQueue.Remove(pendingAction.Id));
     }
 
     private void AddApproval(

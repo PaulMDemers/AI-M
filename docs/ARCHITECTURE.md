@@ -14,6 +14,7 @@ Defines the domain contracts and provider-neutral types:
 - Conversation groups, conversations, and summaries.
 - Provider accounts, health, diagnostics, and provider interfaces.
 - Agent tools and approval metadata.
+- Shared pending action queue and restored approval execution.
 - Parsers for hidden tool requests and self-management directives.
 
 ### AIM.Providers
@@ -90,4 +91,4 @@ Models can request memory and personality changes through structured directives 
 
 ## Pending Actions
 
-Pending actions are global and persistent. Live approvals can continue the provider turn. Restored durable tool approvals can still apply the saved tool change after restart and leave a system audit message in the original conversation.
+Pending actions are global and persistent. The shared queue lives in `AIM.Core` so both desktop shells use the same file format and restored approval execution path. Live approvals can continue the provider turn. Restored durable tool approvals can still apply the saved tool change after restart and leave a system audit message in the original conversation.

@@ -1,15 +1,8 @@
 using AIM.Core.Chat;
-using AIM.Core.Tools;
+using AIM.Core.PendingActions;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AIM.Desktop.Wpf.ViewModels;
-
-public sealed record PendingAgentActionResult(string Summary, ChatMessage? ToolMessage = null);
-
-public sealed record PendingAgentActionDurableToolCall(
-    Guid PersonalityId,
-    Guid ConversationId,
-    AgentToolCall Call);
 
 public sealed class PendingAgentActionViewModel : ObservableObject
 {
