@@ -63,7 +63,7 @@ internal sealed class ChatForm : Form
         _providers = providers.ToDictionary(provider => provider.Key, StringComparer.OrdinalIgnoreCase);
 
         ClassicAim.ApplyClassicForm(this);
-        Text = $"{personality.DisplayName} - Instant Message";
+        Text = BuildWindowTitle(personality);
         Width = 560;
         Height = 620;
         MinimumSize = new Size(480, 460);
@@ -112,47 +112,37 @@ internal sealed class ChatForm : Form
         var root = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
-            RowCount = 8,
+            RowCount = 2,
             ColumnCount = 1,
             Padding = new Padding(6, 0, 6, 6)
         };
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 86));
-        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-        var banner = new Panel
+        var body = new TableLayoutPanel
         {
-            Height = 42,
             Dock = DockStyle.Fill,
-            BackColor = ClassicAim.AwayYellow,
-            BorderStyle = BorderStyle.Fixed3D,
-            Padding = new Padding(6, 4, 6, 4)
+            RowCount = 5,
+            ColumnCount = 2,
+            Padding = new Padding(0, 6, 0, 0)
         };
-        var avatar = ClassicAim.AvatarPicture(Personality, 30);
-        avatar.Location = new Point(6, 5);
-        var bannerTitle = ClassicAim.Label($"Instant Message with {Personality.DisplayName}", ClassicAim.BoldFont, ClassicAim.AimBlue);
-        bannerTitle.Location = new Point(42, 5);
-        var bannerText = ClassicAim.Label("AI-M classic mode", ClassicAim.SmallFont);
-        bannerText.Location = new Point(42, 23);
-        banner.Controls.AddRange([avatar, bannerTitle, bannerText]);
+        body.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 52));
+        body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+        body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        body.RowStyles.Add(new RowStyle(SizeType.Absolute, 86));
+        body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-        var warning = new Label
+        var avatarRail = new Panel
         {
-            Text = "Never give out passwords or secrets in an instant message.",
             Dock = DockStyle.Fill,
-            Height = 28,
-            TextAlign = ContentAlignment.MiddleLeft,
-            Font = ClassicAim.SmallFont,
-            ForeColor = Color.FromArgb(120, 60, 0),
-            BackColor = Color.FromArgb(255, 250, 214),
-            BorderStyle = BorderStyle.Fixed3D,
-            Padding = new Padding(4, 0, 0, 0)
+            BackColor = SystemColors.Control,
+            Padding = new Padding(0, 0, 8, 0)
         };
+        var avatar = ClassicAim.AvatarPicture(Personality, 40);
+        avatar.Location = new Point(4, 0);
+        avatarRail.Controls.Add(avatar);
 
         _summary.Dock = DockStyle.Fill;
         _summary.Height = 24;
@@ -175,7 +165,7 @@ internal sealed class ChatForm : Form
         _providerSetupPanel.Controls.Add(_providerSetupLabel);
 
         _transcript.Dock = DockStyle.Fill;
-        _transcript.Font = new Font("Tahoma", 8.25f);
+        _transcript.Font = new Font("Tahoma", 9f);
         _transcript.BackColor = SystemColors.Window;
         _transcript.BorderStyle = BorderStyle.Fixed3D;
         _transcript.ReadOnly = true;
@@ -192,7 +182,7 @@ internal sealed class ChatForm : Form
         _input.AcceptsReturn = true;
         _input.ScrollBars = ScrollBars.Vertical;
         _input.BorderStyle = BorderStyle.Fixed3D;
-        _input.Font = new Font("Tahoma", 8.25f);
+        _input.Font = new Font("Tahoma", 9f);
         _input.KeyDown += async (_, e) =>
         {
             if (e.KeyCode == Keys.Enter && !e.Shift)
@@ -214,7 +204,11 @@ internal sealed class ChatForm : Form
         _status.Dock = DockStyle.Fill;
         _status.TextAlign = ContentAlignment.MiddleLeft;
         var send = ClassicAim.Button("Send");
+        send.Dock = DockStyle.Fill;
+        send.Margin = new Padding(4, 4, 0, 0);
         send.Click += async (_, _) => await SendAsync();
+        _stopButton.Dock = DockStyle.Fill;
+        _stopButton.Margin = new Padding(4, 4, 4, 0);
         _stopButton.Click += (_, _) => _responseCancellationTokenSource?.Cancel();
         _stopButton.Enabled = false;
         buttons.Controls.Add(_status, 0, 0);
@@ -222,13 +216,16 @@ internal sealed class ChatForm : Form
         buttons.Controls.Add(send, 2, 0);
 
         root.Controls.Add(menu, 0, 0);
-        root.Controls.Add(banner, 0, 1);
-        root.Controls.Add(warning, 0, 2);
-        root.Controls.Add(_providerSetupPanel, 0, 3);
-        root.Controls.Add(_transcript, 0, 4);
-        root.Controls.Add(_approvalPanel, 0, 5);
-        root.Controls.Add(_input, 0, 6);
-        root.Controls.Add(buttons, 0, 7);
+        root.Controls.Add(body, 0, 1);
+
+        body.Controls.Add(_providerSetupPanel, 0, 0);
+        body.SetColumnSpan(_providerSetupPanel, 2);
+        body.Controls.Add(avatarRail, 0, 1);
+        body.SetRowSpan(avatarRail, 4);
+        body.Controls.Add(_transcript, 1, 1);
+        body.Controls.Add(_approvalPanel, 1, 2);
+        body.Controls.Add(_input, 1, 3);
+        body.Controls.Add(buttons, 1, 4);
 
         Controls.Add(root);
         MainMenuStrip = menu;
@@ -263,6 +260,11 @@ internal sealed class ChatForm : Form
             "Buddy Info",
             MessageBoxButtons.OK,
             MessageBoxIcon.Information);
+    }
+
+    private static string BuildWindowTitle(Personality personality)
+    {
+        return $"Instant Message with {personality.DisplayName} - AI-M";
     }
 
     private async Task SendVisibleMessageAsync(string text)
@@ -691,6 +693,7 @@ internal sealed class ChatForm : Form
             Personality.AvatarImagePath,
             Personality.Category), cancellationToken);
         Personality = updated;
+        Text = BuildWindowTitle(Personality);
     }
 
     private async Task RefreshLocalStateAfterToolAsync(AgentToolCall call)
