@@ -30,3 +30,21 @@ jobs:
 
       - name: Test
         run: dotnet test tests\AIM.Tests\AIM.Tests.csproj --no-build --configuration Release --verbosity normal
+
+      - name: Publish WPF desktop
+        run: .\scripts\publish-desktop.ps1 -App Wpf -Configuration Release -OutputRoot artifacts/publish
+
+      - name: Publish WinForms desktop
+        run: .\scripts\publish-desktop.ps1 -App WinForms -Configuration Release -OutputRoot artifacts/publish
+
+      - name: Upload WPF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-M-WPF-win-x64
+          path: artifacts/publish/AIM.Desktop.Wpf
+
+      - name: Upload WinForms artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-M-WinForms-win-x64
+          path: artifacts/publish/AIM.Desktop.WinForms

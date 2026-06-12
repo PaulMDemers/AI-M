@@ -15,6 +15,14 @@ dotnet restore AIM.slnx
 dotnet build AIM.slnx
 ```
 
+## Publish Desktop Builds
+
+```powershell
+.\scripts\publish-desktop.ps1
+```
+
+See [Releasing](RELEASING.md) for artifact details.
+
 ## Run Tests
 
 ```powershell

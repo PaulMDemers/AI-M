@@ -72,6 +72,12 @@ Run the classic WinForms shell:
 dotnet run --project src\AIM.Desktop.WinForms\AIM.Desktop.WinForms.csproj
 ```
 
+Publish local Windows builds:
+
+```powershell
+.\scripts\publish-desktop.ps1
+```
+
 For demo screenshots or local exploration without the first-run setup dialog:
 
 ```powershell
@@ -111,10 +117,13 @@ Build outputs, local databases, app settings, Visual Studio state, provider cred
 - [Architecture](docs/ARCHITECTURE.md)
 - [Development](docs/DEVELOPMENT.md)
 - [Pending Actions](docs/PENDING_ACTIONS.md)
+- [Releasing](docs/RELEASING.md)
 - [Roadmap](docs/ROADMAP.md)
 
 ## Project Status
 
 AI-M is early and actively evolving. The core architecture, storage, provider plumbing, memory flow, tool approvals, and two desktop shells are in place, but UX polish, provider breadth, packaging, and long-running agent workflows are still moving targets.
 
-No open-source license has been selected yet. Choose and add a `LICENSE` file before treating the repository as reusable by third parties.
+## License
+
+AI-M is licensed under the [MIT License](LICENSE).
